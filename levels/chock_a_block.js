@@ -35,10 +35,10 @@ function recursivePrice(callback) {
 			console.log(priceAverage);
 			console.log('Average ask price', calculateAveragePrice());
 
-			if (cb) return cb();
+			if (callback) return callback();
 		} else {
 			setTimeout(function() {
-				recursivePrice(callback);
+				recursivePrice(callback ? callback : function() {});
 			}, 2000);
 		}
 	}, function(err) {
