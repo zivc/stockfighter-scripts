@@ -22,7 +22,7 @@ agent
 	.get('http://api.stockfighter.io/ob/api/venues/'+config.venue+'/stocks/'+config.ticker+'/quote')
 	.set('X-Starfighter-Authorization', config.key)
 	.end(function(err,res) {
-		console.log(err||res);
+		console.log(err||res.body);
 	});
 
 
