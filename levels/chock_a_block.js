@@ -26,15 +26,15 @@ function getPrice(venue, ticker) {
 function recursivePrice(cb) {
 	getPrice(config.venue, config.ticker).then(function(price) {
 		priceAverage.push(Math.max(price.bidSize,price.askSize));
-		if (priceAverage.length === 5) {
+		if (priceAverage.length === 10) {
 			console.log('');
 			console.log('Average prices for',config.ticker);
 			console.log(priceAverage);
-			console.log(calculateAveragePrice());
+			console.log('Average ask price', calculateAveragePrice());
 
-			cb();
+			if (cb) return cb();
 		} else {
-			setTimeout(recursivePrice, 5000);
+			setTimeout(recursivePrice, 2000);
 		}
 	}, function(err) {
 		throw err;
@@ -81,6 +81,8 @@ function marketOrder(venue, ticker, price, qty, direction) {
 }
 
 recursivePrice(function() {
+
+	console.log('Performing market order!');
 
 	marketOrder(config.venue, config.ticker, calculateAveragePrice(), 100, 'buy').then(function(response) {
 		console.log('response');
