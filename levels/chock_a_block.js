@@ -85,16 +85,29 @@ function marketOrder(venue, ticker, price, qty, direction) {
 
 }
 
+var shares = 100;
+
 recursivePrice(function() {
 
 	console.log('Performing market order!');
 
-	marketOrder(config.venue, config.ticker, calculateAveragePrice(), 100, 'buy').then(function(response) {
-		console.log('response');
-		console.log(response);
-	}, function(err) {
-		throw err;
-	});
+	setInterval(function() {
+		if (shares >= 100000) {
+			console.log('all done');
+			process.exit(0);
+		}
+		marketOrder(config.venue, config.ticker, calculateAveragePrice(), 100, 'buy').then(function(response) {
+			console.log('response');
+			console.log(response);
+			response.fills.forEach(function(fill) {
+				priceAverage.shift();
+				priceAverage.push(fill.price)
+				shares = shares + fill.qty;
+			});
+		}, function(err) {
+			throw err;
+		});
+	}, 100);
 
 });
 
