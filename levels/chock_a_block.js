@@ -64,7 +64,7 @@ function calculateAveragePrice() {
 		sum = sum + price;
 		console.log(sum);
 	});
-	return sum / filtered;
+	return sum / filtered.length;
 }
 
 
