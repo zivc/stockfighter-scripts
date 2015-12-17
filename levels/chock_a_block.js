@@ -7,15 +7,7 @@ config.venue = 'GYTDEX';
 config.ticker = 'TOLM';
 config.account = 'IAR75129927';
 
-var order = {
-	account:config.account,
-	venue:config.venue,
-	symbol:config.ticker,
-	price:5800,
-	qty:100,
-	direction:"buy",
-	orderType:"limit"
-};
+
 
 var priceAverage = [];
 
@@ -31,7 +23,7 @@ function getPrice(venue, ticker) {
 	return q.promise;
 }
 
-function recursivePrice() {
+function recursivePrice(cb) {
 	getPrice(config.venue, config.ticker).then(function(price) {
 		priceAverage.push(Math.max(price.bidSize,price.askSize));
 		if (priceAverage.length === 5) {
@@ -39,6 +31,8 @@ function recursivePrice() {
 			console.log('Average prices for',config.ticker);
 			console.log(priceAverage);
 			console.log(calculateAveragePrice());
+
+			cb();
 		} else {
 			setTimeout(recursivePrice, 5000);
 		}
@@ -46,8 +40,6 @@ function recursivePrice() {
 		throw err;
 	});
 }
-
-recursivePrice();
 
 function calculateAveragePrice() {
 	var filtered = priceAverage.sort().filter(function(price) {
@@ -63,10 +55,41 @@ function calculateAveragePrice() {
 	return sum / filtered.length;
 }
 
+function marketOrder(venue, ticker, price, qty, direction) {
 
+	var q = $q.defer();
 
+	agent
+		.post('https://api.stockfighter.io/ob/api/venues/'+venue+'/stocks/'+ticker+'/orders')
+		.set('X-Starfighter-Authorization', config.key)
+		.send({
+			account:config.account,
+			venue:venue,
+			symbol:ticker,
+			price:Math.ceil(price),
+			qty:qty,
+			direction:direction,
+			orderType:"limit"
+		})
+		.end(function(err,res) {
+			if (err) return q.reject(err);
+			q.resolve(res.body);
+		});
 
+	return q.promise;
 
+}
+
+recursivePrice(function() {
+
+	marketOrder(config.venue, config.ticker, calculateAveragePrice(), 100, 'buy').then(function(response) {
+		console.log('response');
+		console.log(response);
+	}, function(err) {
+		throw err;
+	});
+
+});
 
 
 
