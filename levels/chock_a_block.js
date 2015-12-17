@@ -33,6 +33,7 @@ function recursivePrice(cb) {
 			console.log('Average ask price', calculateAveragePrice());
 
 			if (cb) return cb();
+			console.log('no callback?');
 		} else {
 			setTimeout(recursivePrice, 2000);
 		}
