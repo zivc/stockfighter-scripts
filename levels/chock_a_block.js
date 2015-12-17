@@ -33,7 +33,7 @@ function getPrice(venue, ticker) {
 
 function recursivePrice() {
 	getPrice(config.venue, config.ticker).then(function(price) {
-		priceAverage.push(price.askSize > price.bidSize ? price.askSize : price.bidSize);
+		priceAverage.push(Math.max(price.bidSize,price.askSize));
 		if (priceAverage.length === 5) {
 			console.log('');
 			console.log('Average prices for',config.ticker);
@@ -50,9 +50,12 @@ function recursivePrice() {
 recursivePrice();
 
 function calculateAveragePrice() {
-	var filtered = priceAverage.filter(function(price) {
+	var filtered = priceAverage.sort().filter(function(price) {
 		return price > 0;
 	});
+
+	if (filtered.length > 5) filtered = filtered.splice(filtered.length - 5, filtered.length);
+
 	var sum = 0;
 	filtered.forEach(function(price) {
 		sum = sum + price;
