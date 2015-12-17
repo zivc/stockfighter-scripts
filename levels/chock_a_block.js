@@ -23,19 +23,23 @@ function getPrice(venue, ticker) {
 	return q.promise;
 }
 
-function recursivePrice(cb) {
+function recursivePrice(callback) {
+
 	getPrice(config.venue, config.ticker).then(function(price) {
+
 		priceAverage.push(Math.max(price.bidSize,price.askSize));
-		if (priceAverage.length === 10) {
+
+		if (priceAverage.length >= 10) {
 			console.log('');
 			console.log('Average prices for',config.ticker);
 			console.log(priceAverage);
 			console.log('Average ask price', calculateAveragePrice());
 
 			if (cb) return cb();
-			console.log('no callback?');
 		} else {
-			setTimeout(recursivePrice, 2000);
+			setTimeout(function() {
+				recursivePrice(callback);
+			}, 2000);
 		}
 	}, function(err) {
 		throw err;
