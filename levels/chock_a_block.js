@@ -55,8 +55,14 @@ function calculateAveragePrice() {
 		return price > 0;
 	});
 	var sum = 0;
+	console.log('');
+	console.log('Filtered');
+	console.log(filtered);
+	console.log('');
+	console.log(sum);
 	filtered.forEach(function(price) {
 		sum = sum + price;
+		console.log(sum);
 	});
 	return sum / filtered;
 }
