@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/zivc/stockfighter-scripts#readme",
   "devDependencies": {
+    "q": "^1.4.1",
     "superagent": "^1.6.1"
   }
 }
