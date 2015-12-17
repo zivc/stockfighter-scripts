@@ -29,7 +29,7 @@ function getPrice(venue, ticker) {
 			q.resolve(res.body);
 		});
 	return q.promise;
-};
+}
 
 function recursivePrice() {
 	getPrice(config.venue, config.ticker).then(function(price) {
@@ -46,6 +46,7 @@ function recursivePrice() {
 	});
 }
 
+recursivePrice();
 
 
 
@@ -56,10 +57,7 @@ function recursivePrice() {
 
 
 
-var myPrice = 5800;
-
-
-
+//var myPrice = 5800;
 
 // agent
 // 	.post('https://api.stockfighter.io/ob/api/venues/'+config.venue+'/stocks/'+config.ticker+'/orders')
