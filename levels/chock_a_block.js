@@ -2,9 +2,9 @@ process.chdir(__dirname);
 var StockfighterClient = require('../client/client'),
 	sf = new StockfighterClient(require('../config.js'));
 
-var exchange = 'TEEX',
-	symbol = 'KFH',
-	account = 'JAJ78073330';
+var exchange = 'MQNEX',
+	symbol = 'ADBI',
+	account = 'LAK28072608';
 
 // TEST NETWORK TO SEE IF EXCHANGE AND SYMBOL EXISTS
 
@@ -60,7 +60,7 @@ var tradingAlgo = function() {
 		});
 
 		if (orders.asks.length > 0) {
-			sf.stocksOrder(symbol, orders.asks[0].price, orders.asks[0].qty, 'buy', 'limit').then(function(res) {
+			sf.stocksOrder(symbol,  orders.asks[0].price - Math.ceil((orders.asks[0].price / 100) * 0), orders.asks[0].qty, 'buy', 'limit').then(function(res) {
 				console.log(res);
 				setTimeout(tradingAlgo, 500);
 			}, function(err) {
