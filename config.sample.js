@@ -1,3 +1,4 @@
 module.exports = {
-	key: ''
+	key: '',
+	api:'https://api.stockfighter.io/ob/api'
 }
