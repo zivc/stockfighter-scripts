@@ -19,7 +19,7 @@ sf.venueSet(exchange).then(function(res) {
 		}).length === 1) {
 
 			console.log('Symbol '+symbol+' exists');
-			
+
 			tradingAlgo();
 
 		} else {
@@ -41,7 +41,7 @@ var tradingAlgo = function() {
 	/*
 
 		What we need to do is do the order, then wait for the order
-		to complete, if it is still open for longer than 30 secs, 
+		to complete, if it is still open for longer than 30 secs,
 		cancel it.
 
 		Remake it at a higher price, slowly increment upwards
@@ -53,6 +53,14 @@ var tradingAlgo = function() {
 	sf.stocksOrderbook(symbol).then(function(orders) {
 		console.log('Orderbook',orders);
 
+		function checkStatus(id) {
+			sf.stocksOrderStatus(id, symbol, exchange).then(function(status) {
+				console.log('stock status', status);
+			}, function(err) {
+				throw err;
+			});
+		}
+
 		orders.asks = orders.asks.sort(function(a,b) {
 			if (a.price > b.price) return 1;
 			if (a.price < b.price) return -1;
@@ -61,14 +69,13 @@ var tradingAlgo = function() {
 
 		if (orders.asks.length > 0) {
 			sf.stocksOrder(symbol,  orders.asks[0].price - Math.ceil((orders.asks[0].price / 100) * 0), orders.asks[0].qty, 'buy', 'limit').then(function(res) {
-				console.log(res);
-				setTimeout(tradingAlgo, 500);
+				console.log('Order Response', res);
+				//setTimeout(tradingAlgo, 500);
 			}, function(err) {
 				throw err;
 			});
 		} else {
-			// retry in 5 seconds or buy the cheapest sale
-			setTimeout(tradingAlgo, 5000);
+			// Put in an ask
 		}
 
 	}, function(err) {
